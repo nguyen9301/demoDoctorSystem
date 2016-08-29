@@ -38,6 +38,7 @@ function getPatientData()
 		{
 			$scope.patients[i].birthdate = new Date($scope.patients[i].birthdate);
 		}
+		localStorage.setItem('patientData', JSON.stringify($scope.patients));
 	},function(reason)
 	{
 		console.log(reason);
@@ -56,12 +57,16 @@ function loadPatientData()
 		//set patients into empty to get new value from local storage
 		$scope.patients = "";
 		$scope.patients = JSON.parse(localStorage.getItem('patientData'));
+		if($scope.patients == "")
+		{
+			clearData();
+			getPatientData();
+		}
 	}
 	// it not then store patient data to local storage.
 	else
 	{
 		getPatientData();
-		localStorage.setItem('patientData', JSON.stringify($scope.patients));
 	}
 }
 

@@ -10,7 +10,7 @@ var garvanApp = angular.module('garvanApp',[]);
 garvanApp.factory('patientFactory', function($http) {
     var factory = {};
     factory.getPatientList = function() {
-        return $http.get('assets/patientData/patients.htm');
+        return $http.get('patientData/patients.json');
     };
     return factory;
 });
