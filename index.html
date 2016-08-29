@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo Doctor system</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--Bootstrap -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!--Custom css -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+</head>
+<body>
+<div ng-app="garvanApp" ng-controller="DoctorController">
+    <div class="container patient_list">
+         <!-- Patient tools row-->
+        <div class="row patient_list_control">
+            <!--Add new patient button -->
+            <span class="btn btn-lg btn-primary control_btn " data-toggle="modal" data-target="#addPatientModal">
+                <span class="glyphicon glyphicon-plus"></span> 
+                <div class="hidden-xs">Add patient </div>
+            </span>
+             <!--Filter button -->
+            <span class="btn btn-lg btn-primary control_btn" data-toggle="collapse" data-target="#filter">
+                <span class="glyphicon glyphicon-filter"></span> 
+                <div class="hidden-xs">Filter </div>
+            </span>
+            <!--Sort button for mobile -->
+            <span class="btn btn-lg btn-primary control_btn sort_btn visible-xs" data-toggle="modal" data-target="#sortPatientModal" >
+                <span class="glyphicon glyphicon-sort-by-attributes">
+                </span>  
+            </span>
+            <!--Filter row: Filter by name and Date range -->
+            <div class="row collapse row_filter" id="filter">
+                <div class="col-md-4 list_filter" >
+                    <label for="lastname">Filter by name </label>
+                    <input type="text" name="lastname" ng-model="search" class="form-control input-lg">
+                </div>
+                <!--Other browser date range filer -->
+                <div class="col-md-4 list_filter" ng-show="isChrome == false">
+                    <label for="fromDate">Filter from date </label>
+                    <input type="text" name="firstdate" ng-model="fromDate" placeholder="month/day/year" class="form-control input-lg" ng-disabled="isChrome == true">
+                </div>
+                <div class="col-md-4 list_filter" ng-show="isChrome == false">
+                    <label for="toDate"> To date</label>
+                    <input type="text" name="seconddate" ng-model="toDate" placeholder="month/day/year" class="form-control input-lg" ng-disabled="isChrome == true">
+                </div>
+                <!--Chrome date range filter -->
+                <div class="col-md-4 list_filter" ng-show="isChrome == true">
+                    <label for="dateFrom">Filter from date </label>
+                    <input type="date" name="firstdate" ng-model="dateFrom" class="form-control input-lg"  ng-disabled="isChrome == false">
+                </div>
+                <div class="col-md-4 list_filter" ng-show="isChrome == true">
+                    <label for="dateTo"> To date</label>
+                    <input type="date" name="seconddate" ng-model="dateTo" class="form-control input-lg"  ng-disabled="isChrome == false" >
+                </div>
+            </div>
+        </div><!--End patient_list_control-->
+        <!-- List header row-->
+        <div class="row">
+            <!--Last name header -->
+            <div class="col-md-3 col-sm-3 list_header hidden-xs" ng-click="orderBy('lastname')">
+                <span class="hidden-xs">Last name </span>
+                <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'lastname' && reverse == false"></span>
+                <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'lastname' && reverse == true"></span>
+            </div>
+            <!--First name header -->
+            <div class="col-md-3 col-sm-3 list_header hidden-xs" ng-click="orderBy('firstname')">
+                <span class="hidden-xs">First name</span>
+                <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'firstname' && reverse == false"></span>
+                <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'firstname' && reverse == true"></span>
+            </div>
+            <!--DOB  header -->
+            <div class="col-md-3 col-sm-3  list_header text-right hidden-xs" ng-click="orderBy('birthdate')">
+                <span class="hidden-xs">Date of birth</span>
+                <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'birthdate' && reverse == false"></span>
+                <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'birthdate' && reverse == true"></span>
+            </div>
+            <!--Button header -->
+            <div class="col-md-3 col-sm-3 list_header list_header_last_item hidden-xs"> View/Delete</div>
+        </div> <!-- End of list header row-->
+        <!--List body -->
+        <div class="row list_row" ng-repeat="patient in patients | orderBy : sort:reverse | nameFilter:search | dateFilter:fromDate: toDate  | dateFilter:dateFrom: dateTo track by $index">
+            <div class="visible-xs mobile_title">Last name:</div>
+            <div class="col-md-3 col-sm-3 list_item" ng-bind="patient.lastname" ></div>
+            <div class="visible-xs mobile_title">First name:</div>
+            <div class="col-md-3 col-sm-3 list_item" ng-bind="patient.firstname" ></div>
+            <div class="visible-xs mobile_title">Date of birth:</div>
+            <div class="col-md-3 col-sm-3 list_item text-right" ng-bind="patient.birthdate | date : 'dd MMM yyyy'"></div>
+            <div class="col-md-3 col-sm-3 list_row_btn">
+                <span class="btn btn-primary  list_btn list_view_btn"  data-toggle="modal" data-target="#viewPatientModal" ng-click="showCurrentPatient(patient)">
+                  <span class="glyphicon glyphicon-expand"></span>
+                </span>
+                <span class="btn btn-danger list_btn list_cancel_btn" ng-show="confirm"  ng-click="confirm = false">
+                    <span class="glyphicon glyphicon-remove"></span> 
+                </span>
+                <span class="btn btn-primary  list_btn list_confirm_btn" ng-show="confirm" ng-click="deletePatient(patient); confirm = false">
+                    <span class="glyphicon glyphicon-ok"></span> 
+                </span>
+                <span class="btn btn-danger  list_btn list_delete_btn" ng-click="confirm = true" ng-hide="confirm">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </span>
+            </div>
+        </div><!--End of List body -->
+    </div><!--End of container patient_list-->
+
+<!--Add patient modal -->
+<div class="modal fade add_new_patient" id="addPatientModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Patient modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add new patient</h4>
+            </div>
+            <!-- Add patient modal body-->
+            <div class="modal-body">
+                <!--Add new patient form -->
+                <form role="form" ng-submit="addPatient(newPatient)" method="post">
+                <div class="form-group">
+                    <label for="firstname">First name:</label>
+                    <input type="text" ng-model="newPatient.firstname"  class="form-control input-lg" required> 
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last name:</label>
+                    <input type="text"  ng-model="newPatient.lastname"  class="form-control input-lg" required>
+                </div>
+                <div class="form-group">
+                    <label for="birthdate">Date of birth:</label>
+                    <!--Other browser date input -->
+                    <input type="text"  ng-model="newPatient.birthdateText" placeholder="month/day/year"  class="form-control input-lg" ng-show="isChrome == false" required ng-disabled="isChrome == true">
+                    <!--Chrome browser date input -->
+                    <input type="date"  ng-model="newPatient.birthdate"  class="form-control input-lg" ng-show="isChrome == true" required
+                    ng-disabled="isChrome == false">
+                </div>
+                <div class="form-group">
+                    <label for="note">Note:</label>
+                    <textarea type="text"  ng-model="newPatient.note"  class="form-control input-lg" required></textarea>
+                </div>
+            </div><!--End of patient modal body-->
+            <!--Add patient footer body-->
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success form-control add_patient_btn">Add patient</button>
+            </div> <!-- End patient modal footer-->
+            </form><!-- End add new patient form -->
+        </div><!-- End Patient modal content-->
+    </div> <!--End patient dialog -->
+</div><!--End of add patient modal -->
+
+<!-- View patient modal -->
+<div class="modal fade patient_detail" id="viewPatientModal" role="dialog">
+    <!-- View patient modal dialog -->
+    <div class="modal-dialog">
+        <!-- view patient modal content-->
+        <div class="modal-content">
+            <!-- view patient modal header-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{currentPatient.lastname}} {{currentPatient.firstname}}'s details</h4>
+            </div><!--End of view patient modal header-->
+            <!-- view patient modal body-->
+            <div class="modal-body">
+                <div class="row">
+                    <!--Current patient last name-->
+                    <div class="col-md-4">
+                        <label for="lastname">Last name:</label>
+                        <div type="text"  ng-bind="currentPatient.lastname"  class="well item_detail"></div>
+                    </div>
+                    <!--Current patient first name-->
+                    <div class="col-md-4">
+                        <label for="firstname">First name:</label>
+                        <div type="text" ng-bind="currentPatient.firstname" class="well item_detail" ></div>
+                    </div>
+                    <!--Current patient DOB-->
+                    <div class="col-md-4">
+                        <label for="birthdate">Date of birth:</label>
+                        <div type="date"  ng-bind="currentPatient.birthdate | date : 'dd MMM yyyy'"  class="well item_detail"></div>
+                    </div>
+                </div> <!--end of row -->
+                <label >Notes:</label>
+                <!-- patient_notes_container-->
+                <div class="patient_notes_container">
+                    <div class="row " ng-repeat="note in currentPatient.notes track by $index">
+                        <div class="col-md-12">
+                            <div class="well note_item" ng-mouseleave="noteDeleteConfirm = false">
+                                <div class="note_detail_date">
+                                    Date: 
+                                    <span ng-bind="note.createddate | date : 'dd MMM yyyy HH:mm:ss'"></span>
+                                </div> <!--end of note_detail_date -->
+                                <div ng-bind="note.content" class="note_detail_content"></div>
+                                <span class="delete_btn_note" ng-click="noteDeleteConfirm = true"> 
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </span>
+                                <span class="delete_btn_note_cancel" ng-show="noteDeleteConfirm"  ng-click="noteDeleteConfirm = false">
+                                    <span class="glyphicon glyphicon-remove"></span> 
+                                </span>
+                                <span class="delete_btn_note_confirm" ng-show="noteDeleteConfirm" ng-click="deleteNote(note)">
+                                    <span class="glyphicon glyphicon-ok"></span> 
+                                </span>
+                            </div> <!--end of div note_item -->
+                        </div><!--end of col-md-12 -->
+                    </div><!--end of row -->
+                </div><!--end of patient_notes_container-->
+            </div> <!-- end of view patient modal body -->
+            <!--view patient modal footer -->
+            <div class="modal-footer">
+                <div class="row">
+                    <form role="form" ng-submit="addNote(content)" method="post">
+                    <div class="col-md-9">
+                        <textarea type="text"  ng-model="content" placeholder="Add new note" 
+                        class="form-control input_new_note" required></textarea>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success add_btn_note form-control">Add note</button>
+                    </div>
+                    </form>
+                </div>
+            </div><!--end view patient modal footer -->
+        </div><!--end view patient modal content-->
+    </div><!--end View patient modal dialog -->
+</div><!--End of view patient modal -->
+
+<!--Sort patient modal -->
+<div class="modal fade add_new_patient" id="sortPatientModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- sort patient modal content-->
+        <div class="modal-content">
+            <!-- sort patient modal header-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Patient sort mobile</h4>
+            </div><!--end sort patient modal content-->
+            <!-- view patient modal body-->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success sort_mobile_btn form-control" ng-click="orderBy('lastname')">Last name
+                        <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'lastname' && reverse == false"></span>
+                        <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'lastname' && reverse == true"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success sort_mobile_btn form-control" ng-click="orderBy('firstname')">First name
+                        <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'firstname' && reverse == false"></span>
+                        <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'firstname' && reverse == true"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success sort_mobile_btn  form-control" ng-click="orderBy('birthdate')">Date of birth
+                        <span class="glyphicon glyphicon-menu-up" ng-show="sort == 'birthdate' && reverse == false"></span>
+                        <span class="glyphicon glyphicon-menu-down" ng-show="sort == 'birthdate' && reverse == true"></span>
+                        </button>
+                    </div>
+                </div><!-- end row-->
+            </div><!-- end sort modal body-->
+        </div><!-- sort patient modal content-->
+    </div><!-- sort patient modal dialog-->
+</div><!--End of sort patient modal -->
+</div><!-- End of garvanApp -->
+
+<!--Bootstrap + Jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--AngularJS -->   
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<!--Required custom js -->
+<script src="app/app.js"></script>
+<script src="controllers/doctor.js"></script>
+</body>
+</html>

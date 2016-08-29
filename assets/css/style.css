@@ -1,0 +1,175 @@
+/*
+* NGUYEN NGUYEN 2016 version 1.0
+*/
+/* Declare variables here*/
+/*----Common css----*/
+.glyphicon-trash, .glyphicon-remove {
+  top: 3px !important;
+  left: -1px; }
+
+.glyphicon-expand {
+  top: 2px !important;
+  right: -1px; }
+
+.form-control {
+  border-radius: 0px !important; }
+
+.modal-content {
+  border-radius: 0px !important; }
+
+/****************************** Dr page CSS *****************************************/
+.patient_list {
+  border: 1px solid #eee;
+  background: #fff; }
+
+.patient_list .list_header {
+  background: #337ab7;
+  border-right: 2px solid #fff;
+  font-size: 18px;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer; }
+.patient_list .list_header_last_item {
+  border-right: none !important;
+  cursor: default; }
+.patient_list .list_item {
+  border-right: 2px solid #fff;
+  line-height: 3;
+  font-size: 16px; }
+.patient_list .list_row:hover {
+  background: #ccc !important; }
+.patient_list .list_row .list_row_btn {
+  vertical-align: -webkit-baseline-middle;
+  margin-top: 6px; }
+.patient_list .list_row:nth-child(odd) {
+  background: #EFEFEF; }
+.patient_list .control_btn {
+  border-radius: 0px !important;
+  font-size: 16px;
+  width: 110px; }
+.patient_list .list_btn {
+  border-radius: 0px !important;
+  font-size: 24px;
+  padding: 0px 6px; }
+.patient_list .patient_list_control {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
+.add_new_patient .add_patient_btn {
+  height: 54px;
+  font-size: 23px; }
+
+/*---Patient modal css ----*/
+.patient_detail .add_btn_note {
+  width: 100%;
+  height: 54px;
+  float: left; }
+.patient_detail .note_item {
+  position: relative;
+  word-wrap: break-word; }
+  .patient_detail .note_item .delete_btn_note, .patient_detail .note_item .delete_btn_note_confirm, .patient_detail .note_item .delete_btn_note_cancel {
+    display: none;
+    position: absolute;
+    background: #ccc;
+    float: right;
+    top: 0;
+    right: 0;
+    color: #d9534f;
+    font-size: 18px;
+    padding: 5px;
+    min-width: 30px; }
+  .patient_detail .note_item .delete_btn_note_confirm {
+    right: 30px; }
+  .patient_detail .note_item .delete_btn_note_cancel {
+    right: 0; }
+  .patient_detail .note_item .delete_btn_note {
+    right: 0;
+    opacity: 0.6; }
+  .patient_detail .note_item:hover .delete_btn_note, .patient_detail .note_item:hover .delete_btn_note_confirm, .patient_detail .note_item:hover .delete_btn_note_cancel {
+    display: block; }
+.patient_detail .item_detail {
+  font-size: 18px; }
+.patient_detail .note_detail_content {
+  font-size: 16px; }
+.patient_detail .note_detail_date {
+  font-size: 12px;
+  color: #AAA; }
+.patient_detail .patient_notes_container {
+  max-height: 300px;
+  min-height: 300px;
+  overflow-y: auto;
+  padding: 16px; }
+.patient_detail .well {
+  border-radius: 0px !important; }
+
+/*----filter row css ----*/
+.row_filter {
+  background: #EFEFEF;
+  min-height: 85px;
+  width: 100%;
+  margin: 0px; }
+
+.input_new_note {
+  margin-bottom: 10px; }
+
+.sort_btn {
+  visibility: hidden;
+  display: inline-block !important; }
+
+.sort_mobile_btn {
+  margin-bottom: 10px; }
+
+/*Media query for screen size up to 320 px */
+@media screen and (max-width: 320px) {
+  .patient_list .patient_list_control {
+    background: #ccc;
+    margin-top: 0px; }
+
+  .sort_btn {
+    visibility: visible !important; } }
+/*Media query for screen size up to 736px */
+@media screen and (max-width: 736px) {
+  .patient_list .patient_list_control {
+    background: #ccc;
+    margin-top: 0px; }
+  .patient_list .control_btn {
+    width: 103px; }
+
+  .patient_detail .note_item .delete_btn_note, .patient_detail .note_item .delete_btn_note_confirm, .patient_detail .note_item .delete_btn_note_cancel {
+    display: block; }
+
+  .list_row {
+    position: relative;
+    max-height: 200px; }
+    .list_row .list_row_btn {
+      opacity: 0.6;
+      margin-top: 0px;
+      height: 100%;
+      width: 100%; }
+      .list_row .list_row_btn .list_btn {
+        position: absolute; }
+      .list_row .list_row_btn .list_view_btn {
+        top: -204px;
+        right: 5px; }
+      .list_row .list_row_btn .list_delete_btn {
+        bottom: 20px;
+        right: 5px; }
+      .list_row .list_row_btn .list_confirm_btn {
+        right: 50px;
+        bottom: 20px; }
+      .list_row .list_row_btn .list_cancel_btn {
+        bottom: 20px;
+        right: 5px; }
+    .list_row .list_item {
+      text-align: left; }
+
+  .mobile_title {
+    margin-left: 10px; }
+
+  .row_filter {
+    min-height: 220px; }
+
+  .sort_btn {
+    visibility: visible !important; } }
+
+/*# sourceMappingURL=style.css.map */
